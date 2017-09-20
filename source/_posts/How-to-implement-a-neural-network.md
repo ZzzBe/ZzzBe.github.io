@@ -1,7 +1,9 @@
 ---
 title: How to implement a neural network
 date: 2017-09-19 19:32:52
-tags: Deep Learning
+tags: 
+- Deep Learning
+- Neural Network
 mathjax: true
 ---
 

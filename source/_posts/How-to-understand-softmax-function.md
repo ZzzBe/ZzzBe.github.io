@@ -200,7 +200,7 @@ softmax_graph(x, y, "Input", "Softmax Scores")
 
 
 
-![png](/How-to-understand-softmax-function/output_9_1.png)
+![](How-to-understand-softmax-function/output_9_1.png)
 
 
 The figure shows the property of softmax function:

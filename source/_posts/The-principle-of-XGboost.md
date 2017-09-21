@@ -1,10 +1,10 @@
 ---
 title: The principle of XGboost
 date: 2017-09-20 23:22:12
-tags: 
-- Deep Learning 
+tags: Deep Learning 
 mathjax: true
 ---
+
 
 ***Xgboost***
 
@@ -32,13 +32,13 @@ The tree ensemble model is a set of classification and regression trees ([CART](
 ## A simple example
 Here’s a simple example of a CART that classifies whether someone will like computer games.
 
-![](./pic/cart.png)
+![](The-principle-of-XGboost/cart.png)
 
 ## CART Model
 
 Usually, a single tree is not strong enough to be used in practice. What is actually used is the so-called tree ensemble model, which sums the prediction of multiple trees together.
 
-![](./pic/twocart.png)
+![](The-principle-of-XGboost/twocart.png)
 
 The prediction scores of each individual tree are summed up to get the final score.
 
@@ -60,7 +60,8 @@ we use an additive strategy: fix what we have learned, and add one new tree at a
 $$ \hat{y_i}^0 = 0 $$
 $$ \hat{y_i}^1 = \hat{y_i}^0 + f_1(x_i)$$
 $$...$$
-$$ \hat{y_i}^t = \sum_{k+1}^t f_k(x_i) = \hat {y_i}^{t-1} + f_t(x_i)$$
+$$\hat{y_i}^t = \hat{y_i}^{t+1} + f_t(x_i) = \sum_{k=1}^t f_k(x_i)$$
+
 
 
 If we consider using MSE as our loss function, it becomes the following form.
@@ -70,6 +71,12 @@ $$\begin{split}\text{obj}^{t} & = \sum_{i=1}^n (y_i - (\hat{y_i}^{t-1} + f_t(x_i
 ## Optimize the objective
 The form of MSE is friendly, with a first order term (usually called the residual) and a quadratic term. For other losses of interest (for example, logistic loss), it is not so easy to get such a nice form. So in the general case, we take the Taylor expansion of the loss function up to the second order
 
+$$ \text{obj}^{(t)} = \sum_{i=1}^n [l(y_i, {\hat{y_i}^{t-1} +g_i f_t(x_i) +\frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t) + constant$$
+
+where the $g_i$ and $h_i$ are defined as:
+
+$$g_i = \partial_{\hat{y_i}^{t-1}} l(y_i, {\hat{y_i}}^{t-1})$$
+$$h_i = \partial_{\hat{y_i}^{t-1}}^2 l(y_i, {\hat{y_i}}^{t-1})$$
 
 After we remove all the constants, the specific objective at step $t$ becomes
 
@@ -83,7 +90,7 @@ We have introduced the training step, but wait, there is one important thing, th
 $$f_t(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow \{1,2,\cdots,T\} $$
 Here $ w $ is the vector of scores on leaves, $ q $ is a function assigning each data point to the corresponding leaf, and $ T $ is the number of leaves
 
-![](./pic/fg.png)
+![](The-principle-of-XGboost/fg.png)
 
 ## Define the Complexity of Tree
 
@@ -103,7 +110,7 @@ In this equation $ w_j $ are independent with respect to each other, the form $$
 $$\begin{split}w_j^\ast = -\frac{G_j}{H_j+\lambda}\\ \text{obj}^\ast = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j+\lambda} + \gamma T \end{split}$$
 The last equation measures how good a tree structure $q(x)$ is.
 
-![](./pic/struct.png)
+![](The-principle-of-XGboost/struct.png)
 
 ## Learn the tree structure
 
@@ -119,7 +126,6 @@ This formula can be decomposed as:
 
 For real valued data, we usually want to search for an optimal split. To efficiently do so, we place all the instances in sorted order, like the following picture. 
 
-![](./pic/split_find.png)
+![](The-principle-of-XGboost/split_find.png)
 
 A left to right scan is sufficient to calculate the structure score of all possible split solutions, and we can find the best split efficiently.
-

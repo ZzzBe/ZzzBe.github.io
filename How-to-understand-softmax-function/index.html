@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Deep Learning," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Softmax The property of softmax function(a) prove that softmax is invariant to constant offsets in the input,that is, for any input vecotr x and any constant c,$$softmax(x + c) = softmax(x)$$which x+">
+<meta name="keywords" content="Deep Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to understand softmax function">
+<meta property="og:url" content="https://ZzzBe.github.io/How-to-understand-softmax-function/index.html">
+<meta property="og:site_name" content="Jack&#39;s Notebook">
+<meta property="og:description" content="Softmax The property of softmax function(a) prove that softmax is invariant to constant offsets in the input,that is, for any input vecotr x and any constant c,$$softmax(x + c) = softmax(x)$$which x+">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-understand-softmax-function/How-to-understand-softmax-function/output_9_1.png">
+<meta property="og:updated_time" content="2017-10-07T19:03:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How to understand softmax function">
+<meta name="twitter:description" content="Softmax The property of softmax function(a) prove that softmax is invariant to constant offsets in the input,that is, for any input vecotr x and any constant c,$$softmax(x + c) = softmax(x)$$which x+">
+<meta name="twitter:image" content="https://zzzbe.github.io/How-to-understand-softmax-function/How-to-understand-softmax-function/output_9_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://ZzzBe.github.io/How-to-understand-softmax-function/"/>
+
+
+
+
+
+  <title>How to understand softmax function | Jack's Notebook</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jack's Notebook</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">In me the tiger sniffs the rose.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/resume.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://ZzzBe.github.io/How-to-understand-softmax-function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZHANG Bo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack's Notebook">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">How to understand softmax function</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-19T04:43:37+08:00">
+                2017-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> <strong><em>Softmax</em></strong></p>
+<h2 id="The-property-of-softmax-function"><a href="#The-property-of-softmax-function" class="headerlink" title="The property of softmax function"></a>The property of softmax function</h2><p>(a) prove that <strong><em>softmax</em></strong> is invariant to constant offsets in the input,that is, for any input vecotr <strong><em>x</em></strong> and any constant <strong><em>c</em></strong>,<br>$$softmax(x + c) = softmax(x)$$<br>which <strong><em>x+c</em></strong> means adding the constant <strong><em>c</em></strong> to every dimension of <strong><em>x</em></strong>.</p>
+<p>First all of,to prove the <strong><em>softmax</em></strong> function:</p>
+<p>$$softmax(x_i + c) = \frac {e^{x_i + c}}{\sum_j e^{x_i + c}} $$<br>$$ = \frac {e^x_i \cdot e^c}{\sum_j e^{x_i} \cdot e^c} $$<br>$$ = \frac {e^x_i}{\sum_j e^{x_i}} $$<br>$$ = softmax(x_i) $$</p>
+<h2 id="Implementation-in-python"><a href="#Implementation-in-python" class="headerlink" title="Implementation in python."></a>Implementation in python.</h2><p>(b)Write my implementation in <strong><em>q1_softmax.py</em></strong> and test it.</p>
+<p>From the mathematical point of view,let’s try my solution(<strong><em>Jacksoftmax</em></strong>):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">Jacksoftmax</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="string">"""Compute the softmax function for each row of the input x.</span></div><div class="line"><span class="string">    Arguments:</span></div><div class="line"><span class="string">    x -- A N dimensional vector or M x N dimensional numpy matrix.</span></div><div class="line"><span class="string">    Return:</span></div><div class="line"><span class="string">    x -- You are allowed to modify x in-place</span></div><div class="line"><span class="string">    """</span></div><div class="line">    orig_shape = x.shape</div><div class="line">    <span class="keyword">if</span> len(x.shape) &gt; <span class="number">1</span>:</div><div class="line">        <span class="comment"># Matrix</span></div><div class="line">        max_row = np.max(x, axis=<span class="number">1</span>)</div><div class="line">        e_x = np.exp(x - max_row[:,np.newaxis])</div><div class="line">        div = np.sum(e_x, axis=<span class="number">1</span>)</div><div class="line">        x = e_x/div[:,np.newaxis]</div><div class="line">        <span class="comment">#raise NotImplementedError</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># Vector</span></div><div class="line">        x = np.exp((x-x.min())/(x.max()-x.min()))</div><div class="line">        sum_column = sum(x)</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(x.size):</div><div class="line">            x[i] = x[i]/float(sum_column)</div><div class="line">        <span class="comment">#raise NotImplementedError</span></div><div class="line">    <span class="keyword">assert</span> x.shape == orig_shape</div><div class="line">    <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+<p>Let’s take basic test example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.utils.extmath <span class="keyword">import</span> softmax</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_softmax_basic</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    Some simple tests to get you started.</span></div><div class="line"><span class="string">    Warning: these are not exhaustive.</span></div><div class="line"><span class="string">    """</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"This is the out:"</span></div><div class="line">    test1 = Jacksoftmax(np.array([<span class="number">1</span>,<span class="number">2</span>]))</div><div class="line">    <span class="keyword">print</span> test1</div><div class="line">    ans1 = np.array([<span class="number">0.26894142</span>,  <span class="number">0.73105858</span>])</div><div class="line">    <span class="keyword">assert</span> np.allclose(test1, ans1, rtol=<span class="number">1e-05</span>, atol=<span class="number">1e-06</span>)</div><div class="line"></div><div class="line">    test2 = Jacksoftmax(np.array([[<span class="number">1001</span>,<span class="number">1002</span>],[<span class="number">3</span>,<span class="number">4</span>]]))</div><div class="line">    <span class="keyword">print</span> test2</div><div class="line">    ans2 = np.array([</div><div class="line">        [<span class="number">0.26894142</span>, <span class="number">0.73105858</span>],</div><div class="line">        [<span class="number">0.26894142</span>, <span class="number">0.73105858</span>]])</div><div class="line">    <span class="keyword">assert</span> np.allclose(test2, ans2, rtol=<span class="number">1e-05</span>, atol=<span class="number">1e-06</span>)</div><div class="line"></div><div class="line">    test3 = Jacksoftmax(np.array([[<span class="number">-1001</span>,<span class="number">-1002</span>]]))</div><div class="line">    <span class="keyword">print</span> test3</div><div class="line">    ans3 = np.array([<span class="number">0.73105858</span>, <span class="number">0.26894142</span>])</div><div class="line">    <span class="keyword">assert</span> np.allclose(test3, ans3, rtol=<span class="number">1e-05</span>, atol=<span class="number">1e-06</span>)</div><div class="line">    </div><div class="line">test_softmax_basic()</div></pre></td></tr></table></figure>
+<pre><code>This is the out:
+[ 0.26894142  0.73105858]
+[[ 0.26894142  0.73105858]
+ [ 0.26894142  0.73105858]]
+[[ 0.73105858  0.26894142]]
+</code></pre><p>Use this space to test your softmax implementation by running:<br>        python q1_softmax.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_softmax</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"Running your tests..."</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"Enter the dimension of the matrix:"</span></div><div class="line">    n = input()</div><div class="line">    m = input()</div><div class="line">    test1 = np.random.random((n,m))</div><div class="line">    <span class="keyword">print</span> <span class="string">"The first sample is:"</span></div><div class="line">    <span class="keyword">print</span> test1</div><div class="line">    sk_array1 = softmax(test1)</div><div class="line">    <span class="keyword">print</span> <span class="string">"The answer with softmax of sklearn:"</span></div><div class="line">    <span class="keyword">print</span> sk_array1</div><div class="line">    jk_array1 = Jacksoftmax(test1)</div><div class="line">    <span class="keyword">print</span> <span class="string">"The answer with my softmax:"</span></div><div class="line">    <span class="keyword">print</span> jk_array1</div><div class="line">    <span class="keyword">assert</span> np.allclose(sk_array1, jk_array1, rtol=<span class="number">1e-05</span>, atol=<span class="number">1e-06</span>)</div><div class="line">    test2 = <span class="number">2.5</span> * np.random.randn(n,m)+<span class="number">3</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"The second sample is:"</span></div><div class="line">    <span class="keyword">print</span> test2</div><div class="line">    sk_array2 = softmax(test2)</div><div class="line">    <span class="keyword">print</span> <span class="string">"The answer with softmax of sklearn:"</span></div><div class="line">    <span class="keyword">print</span> sk_array2</div><div class="line">    jk_array2 = Jacksoftmax(test2)</div><div class="line">    <span class="keyword">print</span> <span class="string">"The answer with my softmax:"</span></div><div class="line">    <span class="keyword">print</span> jk_array2</div><div class="line">    <span class="keyword">assert</span> np.allclose(sk_array2, jk_array2, rtol=<span class="number">1e-05</span>, atol=<span class="number">1e-06</span>)</div><div class="line">test_softmax()</div></pre></td></tr></table></figure>
+<pre><code>Running your tests...
+Enter the dimension of the matrix:
+3
+5
+The first sample is:
+[[ 0.0345306   0.18920816  0.49485403  0.03642509  0.90002219]
+ [ 0.9100086   0.61635177  0.8217402   0.69910275  0.59564619]
+ [ 0.01915225  0.8879781   0.35720632  0.57615048  0.09329815]]
+The answer with softmax of sklearn:
+[[ 0.14025367  0.16371552  0.22224406  0.14051963  0.33326711]
+ [ 0.23802995  0.17745901  0.21792002  0.19276863  0.1738224 ]
+ [ 0.13142823  0.31333935  0.18429081  0.22939815  0.14154346]]
+The answer with my softmax:
+[[ 0.14025367  0.16371552  0.22224406  0.14051963  0.33326711]
+ [ 0.23802995  0.17745901  0.21792002  0.19276863  0.1738224 ]
+ [ 0.13142823  0.31333935  0.18429081  0.22939815  0.14154346]]
+The second sample is:
+[[ 4.43086839  4.35889742 -1.00466532  0.65716001  6.19049139]
+ [ 5.66895751  3.98764183  5.77718425 -0.33103714 -0.18460528]
+ [-1.35308692  1.1158278  -0.9865306   3.25704449  0.23047689]]
+The answer with softmax of sklearn:
+[[  1.28731109e-01   1.19791752e-01   5.61127060e-04   2.95653336e-03
+    7.47959479e-01]
+ [  4.33693148e-01   8.07228412e-02   4.83264437e-01   1.07502359e-03
+    1.24455056e-03]
+ [  8.35966458e-03   9.87244880e-02   1.20609700e-02   8.40124177e-01
+    4.07307003e-02]]
+The answer with my softmax:
+[[  1.28731109e-01   1.19791752e-01   5.61127060e-04   2.95653336e-03
+    7.47959479e-01]
+ [  4.33693148e-01   8.07228412e-02   4.83264437e-01   1.07502359e-03
+    1.24455056e-03]
+ [  8.35966458e-03   9.87244880e-02   1.20609700e-02   8.40124177e-01
+    4.07307003e-02]]
+</code></pre><p>Follow the result i will get the correct answer by doing vectorization.</p>
+<h2 id="How-to-use-it"><a href="#How-to-use-it" class="headerlink" title="How to use it?"></a>How to use it?</h2><p>Now,We use the implemented softmax function to create the graph to understand the behavior of this function:</p>
+<ul>
+<li>To create a list which contains values in the range of 0 to 10</li>
+<li>Next,pass the list to calculate the scores from the softmax function</li>
+<li>To create a graph.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line">%matplotlib inline</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">softmax_graph</span><span class="params">(x, y, x_title, y_title)</span>:</span></div><div class="line">    plt.plot(x, y)</div><div class="line">    plt.xlabel(x_title)</div><div class="line">    plt.ylabel(y_title)</div><div class="line">    plt.show()</div><div class="line"></div><div class="line"></div><div class="line">x = np.arange(<span class="number">0</span>,<span class="number">30</span>)</div><div class="line">y = Jacksoftmax(x)</div><div class="line"><span class="keyword">print</span> x</div><div class="line"><span class="keyword">print</span> y</div><div class="line">softmax_graph(x, y, <span class="string">"Input"</span>, <span class="string">"Softmax Scores"</span>)</div></pre></td></tr></table></figure>
+<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+ 25 26 27 28 29]
+[ 0.03152756  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756
+  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756
+  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756
+  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756
+  0.03152756  0.03152756  0.03152756  0.03152756  0.03152756  0.08570079]
+</code></pre><p><img src="How-to-understand-softmax-function/output_9_1.png" alt=""></p>
+<p>The figure shows the property of softmax function:<br><strong><em> The high value gets the hign score(means probability).</em></strong></p>
+<p>We can use the softmax function to multi-classification task.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/How-to-implement-a-neural-network/" rel="prev" title="How to implement a neural network">
+                How to implement a neural network <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">ZHANG Bo</p>
+              <p class="site-description motion-element" itemprop="description">Stay hungry.Stay foolish.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-property-of-softmax-function"><span class="nav-number">1.</span> <span class="nav-text">The property of softmax function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation-in-python"><span class="nav-number">2.</span> <span class="nav-text">Implementation in python.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-use-it"><span class="nav-number">3.</span> <span class="nav-text">How to use it?</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZHANG Bo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

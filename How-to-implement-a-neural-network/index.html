@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Deep Learning,Neural Network," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Neural Network Basics  Derive the gradients of the sigmoid function.So,the sigmoid function is: $$sigmiod(x) = \sigma (x)$$  $$ \sigma ‘(x) = - \frac{1}{(1+e^{-x})^2} \cdot -e^{-x} $$$$ =  \frac{1}{1">
+<meta name="keywords" content="Deep Learning,Neural Network">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to implement a neural network">
+<meta property="og:url" content="https://ZzzBe.github.io/How-to-implement-a-neural-network/index.html">
+<meta property="og:site_name" content="Jack&#39;s Notebook">
+<meta property="og:description" content="Neural Network Basics  Derive the gradients of the sigmoid function.So,the sigmoid function is: $$sigmiod(x) = \sigma (x)$$  $$ \sigma ‘(x) = - \frac{1}{(1+e^{-x})^2} \cdot -e^{-x} $$$$ =  \frac{1}{1">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/CEfunction_1.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/CEfunction_2.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/NN.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/GradientsWithNN.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/NN.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/output_11_0.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/output_13_0.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/gradcheck.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/forward.png">
+<meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/backward.png">
+<meta property="og:updated_time" content="2017-10-07T19:03:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How to implement a neural network">
+<meta name="twitter:description" content="Neural Network Basics  Derive the gradients of the sigmoid function.So,the sigmoid function is: $$sigmiod(x) = \sigma (x)$$  $$ \sigma ‘(x) = - \frac{1}{(1+e^{-x})^2} \cdot -e^{-x} $$$$ =  \frac{1}{1">
+<meta name="twitter:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/CEfunction_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://ZzzBe.github.io/How-to-implement-a-neural-network/"/>
+
+
+
+
+
+  <title>How to implement a neural network | Jack's Notebook</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jack's Notebook</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">In me the tiger sniffs the rose.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/resume.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://ZzzBe.github.io/How-to-implement-a-neural-network/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZHANG Bo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack's Notebook">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">How to implement a neural network</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-19T19:32:52+08:00">
+                2017-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong><em> Neural Network Basics </em></strong></p>
+<h3 id="Derive-the-gradients-of-the-sigmoid-function"><a href="#Derive-the-gradients-of-the-sigmoid-function" class="headerlink" title="Derive the gradients of the sigmoid function."></a>Derive the gradients of the sigmoid function.</h3><p>So,the sigmoid function is:</p>
+<p>$$sigmiod(x) = \sigma (x)$$ </p>
+<p>$$ \sigma ‘(x) = - \frac{1}{(1+e^{-x})^2} \cdot -e^{-x} $$<br>$$ =  \frac{1}{1+e^{-x}} \cdot \frac{e^{-x}}{1+e^{-x}} $$<br>$$ =  \frac{1}{1+e^{-x}} \cdot (1 - \frac{1}{1+e^{-x}}) $$<br>$$ =  \sigma(x) \cdot (1-\sigma(x)) $$</p>
+<h3 id="Derive-the-gradient-of-the-cross-entropy-function-with-the-softmax-fuction"><a href="#Derive-the-gradient-of-the-cross-entropy-function-with-the-softmax-fuction" class="headerlink" title="Derive the gradient of the cross entropy function with the softmax fuction."></a>Derive the gradient of the cross entropy function with the softmax fuction.</h3><p>$$ CE(y,\hat{y}) = - \sum_i y_i log(\hat{y_i}) $$</p>
+<p><img src="How-to-implement-a-neural-network/CEfunction_1.png" alt=""><br><img src="How-to-implement-a-neural-network/CEfunction_2.png" alt=""></p>
+<h3 id="Derive-the-gradients-with-respect-to-the-inputs-x-to-an-one-hidden-layer-neural-network"><a href="#Derive-the-gradients-with-respect-to-the-inputs-x-to-an-one-hidden-layer-neural-network" class="headerlink" title="Derive the gradients with respect to the inputs x to an one-hidden-layer neural network."></a>Derive the gradients with respect to the inputs x to an one-hidden-layer neural network.</h3><p><img src="How-to-implement-a-neural-network/NN.png" alt=""><br><img src="How-to-implement-a-neural-network/GradientsWithNN.png" alt=""></p>
+<h3 id="Calculate-the-value-of-parameters-in-this-neural-network"><a href="#Calculate-the-value-of-parameters-in-this-neural-network" class="headerlink" title="Calculate the value of parameters in this neural network:"></a>Calculate the value of parameters in this neural network:</h3><p>assuming the input is <em>$D_x$</em>-dimensional,the output is <em>$D_y$</em>-dimensional, and there are <em>H</em> hidden units?</p>
+<p>Similar to the neural network in c:<br><img src="How-to-implement-a-neural-network/NN.png" alt=""></p>
+<p>The anwser is:<br>(Dx+1)<em>H+(H+1)</em>Dy</p>
+<h3 id="Fill-in-the-implementation-for-the-sigmoid-activation-function-and-its-gradient"><a href="#Fill-in-the-implementation-for-the-sigmoid-activation-function-and-its-gradient" class="headerlink" title="Fill in the implementation for the sigmoid activation function and its gradient"></a>Fill in the implementation for the sigmoid activation function and its gradient</h3><p>From the mathematical point of view,The sigmoid function should do it:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    Arguments:</span></div><div class="line"><span class="string">    x -- A scalar or numpy array.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    Return:</span></div><div class="line"><span class="string">    s -- sigmoid(x)</span></div><div class="line"><span class="string">    """</span></div><div class="line">    s = <span class="number">1.0</span>/(<span class="number">1</span>+np.exp(-x))</div><div class="line">    <span class="comment">#raise NotImplementedError</span></div><div class="line">    </div><div class="line">    <span class="keyword">return</span> s</div></pre></td></tr></table></figure>
+<p>And then,my improvement of the gradient for the sigmoid function :</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid_grad</span><span class="params">(s)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    Arguments:</span></div><div class="line"><span class="string">    s -- A scalar or numpy array.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    Return:</span></div><div class="line"><span class="string">    ds -- Your computed gradient.</span></div><div class="line"><span class="string">    """</span></div><div class="line"></div><div class="line">    ds = s*(<span class="number">1.0</span>-s)</div><div class="line">    <span class="comment">#raise NotImplementedError</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> ds</div></pre></td></tr></table></figure>
+<p>Now you can test iy by calling:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_sigmoid_basic</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    Some simple tests to get you started.</span></div><div class="line"><span class="string">    Warning: these are not exhaustive.</span></div><div class="line"><span class="string">    """</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"Running basic tests..."</span></div><div class="line">    x = np.array([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">-1</span>, <span class="number">-2</span>]])</div><div class="line">    f = sigmoid(x)</div><div class="line">    g = sigmoid_grad(f)</div><div class="line">    <span class="keyword">print</span> f</div><div class="line">    f_ans = np.array([</div><div class="line">        [<span class="number">0.73105858</span>, <span class="number">0.88079708</span>],</div><div class="line">        [<span class="number">0.26894142</span>, <span class="number">0.11920292</span>]])</div><div class="line">    <span class="keyword">assert</span> np.allclose(f, f_ans, rtol=<span class="number">1e-05</span>, atol=<span class="number">1e-06</span>)</div><div class="line">    <span class="keyword">print</span> g</div><div class="line">    g_ans = np.array([</div><div class="line">        [<span class="number">0.19661193</span>, <span class="number">0.10499359</span>],</div><div class="line">        [<span class="number">0.19661193</span>, <span class="number">0.10499359</span>]])</div><div class="line">    <span class="keyword">assert</span> np.allclose(g, g_ans, rtol=<span class="number">1e-05</span>, atol=<span class="number">1e-06</span>)</div><div class="line"></div><div class="line">test_sigmoid_basic()</div></pre></td></tr></table></figure>
+<pre><code>Running basic tests...
+[[ 0.73105858  0.88079708]
+ [ 0.26894142  0.11920292]]
+[[ 0.19661193  0.10499359]
+ [ 0.19661193  0.10499359]]
+</code></pre><p>Now,we use the implemented sigmoid function to create the graph to understand the behavior of this function:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">%matplotlib inline</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line">x = np.arange(<span class="number">-10.</span>, <span class="number">10.</span>, <span class="number">0.2</span>)</div><div class="line">y = sigmoid(x)</div><div class="line">plt.plot(x,y)</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
+<p><img src="How-to-implement-a-neural-network/output_11_0.png" alt=""></p>
+<p>From the above graph,we can observe that the sigmoid function produces the curve which will be in shape “S”,and returns the output value which falls in the range of 0 to 1.<br>The below are the properties of the Sigmoid function:</p>
+<ul>
+<li>The high value will have the high score but not the higher score.</li>
+<li>Used for binary classification in logistic regression model.</li>
+<li>The probabilities sum need not be 1.</li>
+</ul>
+<p>The below is the graph of the gradient of the sigmoid function:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">%matplotlib inline</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"></div><div class="line">x = np.arange(<span class="number">-10.</span>, <span class="number">10.</span>, <span class="number">0.2</span>)</div><div class="line">y = sigmoid_grad(x)</div><div class="line">plt.plot(x,y)</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
+<p><img src="How-to-implement-a-neural-network/output_13_0.png" alt=""></p>
+<h3 id="To-make-debugging-easier-we-will-now-implement-a-gradient-checker-Fill-in-the-implementation-for-gradcheck-naive-in-q2-gradcheck-py"><a href="#To-make-debugging-easier-we-will-now-implement-a-gradient-checker-Fill-in-the-implementation-for-gradcheck-naive-in-q2-gradcheck-py" class="headerlink" title="To make debugging easier, we will now implement a gradient checker. Fill in the implementation for gradcheck naive in q2 gradcheck.py."></a>To make debugging easier, we will now implement a gradient checker. Fill in the implementation for gradcheck naive in q2 gradcheck.py.</h3><p><strong>Gradient checks</strong></p>
+<p>In theory,performing a gradient check is as simple as comparing the analytic gradient and the numerical gradient.We use the <em>centered</em> difference formula of the form:</p>
+<p><img src="How-to-implement-a-neural-network/gradcheck.png" alt=""></p>
+<p>where ϵ is a very small number,in practice approximately <em>le-5</em> or so.<br><strong><em>Use relative for the comparison.</em></strong><br>It is always more appropriate to consider the <em>relative error</em>.</p>
+<ul>
+<li>relative error &gt; le-2 usually means the gradient is probably wrong.</li>
+<li>le-7 and less you should be happy.</li>
+</ul>
+<p>That means,to implement the gradient check,we would need:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradcheck_naive</span><span class="params">(f, x)</span>:</span></div><div class="line">    <span class="string">""" Gradient check for a function f.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    Arguments:</span></div><div class="line"><span class="string">    f -- a function that takes a single argument and outputs the</span></div><div class="line"><span class="string">         cost and its gradients</span></div><div class="line"><span class="string">    x -- the point (numpy array) to check the gradient at</span></div><div class="line"><span class="string">    """</span></div><div class="line">    rndstate = random.getstate()</div><div class="line">    random.setstate(rndstate)</div><div class="line">    fx, grad = f(x) <span class="comment"># Evaluate function value at original point</span></div><div class="line">    h = <span class="number">1e-4</span>        <span class="comment"># Do not change this!</span></div><div class="line">    <span class="comment"># Iterate over all indexes in x</span></div><div class="line">    it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</div><div class="line">    <span class="keyword">while</span> <span class="keyword">not</span> it.finished:</div><div class="line">        ix = it.multi_index</div><div class="line">        <span class="comment"># Try modifying x[ix] with h defined above to compute</span></div><div class="line">        <span class="comment"># numerical gradients. Make sure you call random.setstate(rndstate)</span></div><div class="line">        <span class="comment"># before calling f(x) each time. This will make it possible</span></div><div class="line">        <span class="comment"># to test cost functions with built in randomness later.</span></div><div class="line">        x[ix] += h</div><div class="line">        random.setstate(rndstate)</div><div class="line">        fhigh = f(x)[<span class="number">0</span>]</div><div class="line">        x[ix] -= <span class="number">2</span>*h</div><div class="line">        random.setstate(rndstate)</div><div class="line">        flow = f(x)[<span class="number">0</span>]</div><div class="line">        x[ix] += h</div><div class="line">        numgrad = ((fhigh-flow)/(<span class="number">2</span>*h)).sum()</div><div class="line">        <span class="comment">#raise NotImplementedError</span></div><div class="line">        <span class="comment"># Compare gradients</span></div><div class="line">        reldiff = abs(numgrad - grad[ix]) / max(<span class="number">1</span>, abs(numgrad), abs(grad[ix]))</div><div class="line">        <span class="keyword">if</span> reldiff &gt; <span class="number">1e-5</span>:</div><div class="line">            <span class="keyword">print</span> <span class="string">"Gradient check failed."</span></div><div class="line">            <span class="keyword">print</span> <span class="string">"First gradient error found at index %s"</span> % str(ix)</div><div class="line">            <span class="keyword">print</span> <span class="string">"Your gradient: %f \t Numerical gradient: %f"</span> % (</div><div class="line">                grad[ix], numgrad)</div><div class="line">            <span class="keyword">return</span></div><div class="line"></div><div class="line">        it.iternext() <span class="comment"># Step to next dimension</span></div><div class="line"></div><div class="line">    <span class="keyword">print</span> <span class="string">"Gradient check passed!"</span></div></pre></td></tr></table></figure>
+<p>Then generate trial function that are used by multiple tests:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> random</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sanity_check</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    Some basic sanity checks.</span></div><div class="line"><span class="string">    """</span></div><div class="line">    quad = <span class="keyword">lambda</span> x: (np.sum(x ** <span class="number">2</span>), x * <span class="number">2</span>)</div><div class="line"></div><div class="line">    <span class="keyword">print</span> <span class="string">"Running sanity checks..."</span></div><div class="line">    gradcheck_naive(quad, np.array(<span class="number">123.456</span>))      <span class="comment"># scalar test</span></div><div class="line">    gradcheck_naive(quad, np.random.randn(<span class="number">3</span>,))    <span class="comment"># 1-D test</span></div><div class="line">    gradcheck_naive(quad, np.random.randn(<span class="number">4</span>,<span class="number">5</span>))   <span class="comment"># 2-D test</span></div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line"></div><div class="line">sanity_check()</div></pre></td></tr></table></figure>
+<pre><code>Running sanity checks...
+Gradient check passed!
+Gradient check passed!
+Gradient check passed!
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">your_sanity_checks</span><span class="params">()</span>:</span></div><div class="line"></div><div class="line">    <span class="keyword">print</span> <span class="string">"Running your sanity checks..."</span></div><div class="line">    test1_function = <span class="keyword">lambda</span> x: (np.log(x), <span class="number">1</span>/x)</div><div class="line">    <span class="keyword">print</span> <span class="string">"The original function is: ln(x)"</span></div><div class="line">    gradcheck_naive(test1_function, np.array(<span class="number">123.456</span>))      <span class="comment"># scalar test</span></div><div class="line">    <span class="comment">#gradcheck_naive(test1_function, np.random.randn(3,))    # 1-D test</span></div><div class="line">    <span class="comment">#gradcheck_naive(test1_function, np.random.randn(4,5))   # 2-D test</span></div><div class="line"></div><div class="line">    test2_function = <span class="keyword">lambda</span> x: (np.sin(x)-np.cos(x), np.cos(x)+np.sin(x))</div><div class="line">    <span class="keyword">print</span> <span class="string">"The original function is: sin(x)-cos(x)"</span></div><div class="line">    gradcheck_naive(test2_function, np.array(<span class="number">123.456</span>))      <span class="comment"># scalar test</span></div><div class="line">    gradcheck_naive(test2_function, np.random.randn(<span class="number">3</span>,))    <span class="comment"># 1-D test</span></div><div class="line">    gradcheck_naive(test2_function, np.random.randn(<span class="number">4</span>,<span class="number">5</span>))   <span class="comment"># 2-D test</span></div><div class="line"></div><div class="line">    test3_function = <span class="keyword">lambda</span> x: (np.exp(x), np.exp(x))</div><div class="line">    <span class="keyword">print</span> <span class="string">"The original function is: exp(x)"</span></div><div class="line">    gradcheck_naive(test3_function, np.array(<span class="number">123.456</span>))      <span class="comment"># scalar test</span></div><div class="line">    gradcheck_naive(test3_function, np.random.randn(<span class="number">3</span>,))    <span class="comment"># 1-D test</span></div><div class="line">    gradcheck_naive(test3_function, np.random.randn(<span class="number">4</span>,<span class="number">5</span>))   <span class="comment"># 2-D test</span></div><div class="line">your_sanity_checks()</div></pre></td></tr></table></figure>
+<pre><code>Running your sanity checks...
+The original function is: ln(x)
+Gradient check passed!
+The original function is: sin(x)-cos(x)
+Gradient check passed!
+Gradient check passed!
+Gradient check passed!
+The original function is: exp(x)
+Gradient check passed!
+Gradient check passed!
+Gradient check passed!
+</code></pre><h3 id="implement-the-forward-and-backward-passes-for-a-neural-network-with-one-sigmoid-hidden-layer"><a href="#implement-the-forward-and-backward-passes-for-a-neural-network-with-one-sigmoid-hidden-layer" class="headerlink" title="implement the forward and backward passes for a neural network with one sigmoid hidden layer."></a>implement the forward and backward passes for a neural network with one sigmoid hidden layer.</h3><p>Let’s consider a simple logistic regression classifier.</p>
+<p>The <strong><em>forward</em></strong> pass computes the output given the input for inference.In forward composes the computation of each layer to computation of each layer to compute the “function” represented by the model.</p>
+<p><img src="How-to-implement-a-neural-network/forward.png" alt=""></p>
+<p>The <strong><em>backward</em></strong> pass computes the gradient given the loss for learning.In backward composes the gradient of each layer to compute the gradient of the whole model by automatic differentiation.</p>
+<p><img src="How-to-implement-a-neural-network/backward.png" alt=""></p>
+<p>The below is my implementation:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward_backward_prop</span><span class="params">(data, labels, params, dimensions)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    Forward and backward propagation for a two-layer sigmoidal network</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    Compute the forward propagation and for the cross entropy cost,</span></div><div class="line"><span class="string">    and backward propagation for the gradients for all parameters.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    Arguments:</span></div><div class="line"><span class="string">    data -- M x Dx matrix, where each row is a training example.</span></div><div class="line"><span class="string">    labels -- M x Dy matrix, where each row is a one-hot vector.</span></div><div class="line"><span class="string">    params -- Model parameters, these are unpacked for you.</span></div><div class="line"><span class="string">    dimensions -- A tuple of input dimension, number of hidden units</span></div><div class="line"><span class="string">                  and output dimension</span></div><div class="line"><span class="string">    """</span></div><div class="line">    <span class="comment">### Unpack network parameters (do not modify)</span></div><div class="line">    ofs = <span class="number">0</span></div><div class="line">    Dx, H, Dy = (dimensions[<span class="number">0</span>], dimensions[<span class="number">1</span>], dimensions[<span class="number">2</span>])</div><div class="line">    W1 = np.reshape(params[ofs:ofs+ Dx * H], (Dx, H))</div><div class="line">    ofs += Dx * H</div><div class="line">    b1 = np.reshape(params[ofs:ofs + H], (<span class="number">1</span>, H))</div><div class="line">    ofs += H</div><div class="line">    W2 = np.reshape(params[ofs:ofs + H * Dy], (H, Dy))</div><div class="line">    ofs += H * Dy</div><div class="line">    b2 = np.reshape(params[ofs:ofs + Dy], (<span class="number">1</span>, Dy))</div><div class="line">    </div><div class="line">    <span class="comment">### forward propagation</span></div><div class="line">    hidden_value = sigmoid(np.dot(data,W1)+b1)</div><div class="line">    y_value = softmax(np.dot(hidden_value,W2)+b2)</div><div class="line">    cost = np.sum(-np.log(y_value[labels == <span class="number">1</span>]))/data.shape[<span class="number">0</span>]</div><div class="line"></div><div class="line">    <span class="comment">### backward propagation</span></div><div class="line">    d_y = (y_value-labels)/data.shape[<span class="number">0</span>]</div><div class="line">    gradW2 = np.dot(hidden_value.T, d_y)</div><div class="line">    gradb2 = np.sum(d_y,axis=<span class="number">0</span>,keepdims=<span class="keyword">True</span>)</div><div class="line">    gradh = np.dot(d_y,W2.T)*sigmoid_grad(hidden_value)</div><div class="line">    gradW1 = np.dot(data.T, gradh)</div><div class="line">    gradb1 = np.sum(gradh,axis=<span class="number">0</span>,keepdims=<span class="keyword">True</span>)</div><div class="line"></div><div class="line">    <span class="comment">### Stack gradients (do not modify)</span></div><div class="line">    grad = np.concatenate((gradW1.flatten(), gradb1.flatten(),</div><div class="line">        gradW2.flatten(), gradb2.flatten()))</div><div class="line"></div><div class="line">    <span class="keyword">return</span> cost, grad</div></pre></td></tr></table></figure>
+<p>Then generate trial function that is used by test:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.utils.extmath <span class="keyword">import</span> softmax</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sanity_check</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    Set up fake data and parameters for the neural network, and test using</span></div><div class="line"><span class="string">    gradcheck.</span></div><div class="line"><span class="string">    """</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"Running sanity check..."</span></div><div class="line"></div><div class="line">    N = <span class="number">20</span></div><div class="line">    dimensions = [<span class="number">10</span>, <span class="number">5</span>, <span class="number">10</span>]</div><div class="line">    data = np.random.randn(N, dimensions[<span class="number">0</span>])   <span class="comment"># each row will be a datum</span></div><div class="line">    labels = np.zeros((N, dimensions[<span class="number">2</span>]))</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(N):</div><div class="line">        labels[i, random.randint(<span class="number">0</span>,dimensions[<span class="number">2</span>]<span class="number">-1</span>)] = <span class="number">1</span></div><div class="line"></div><div class="line">    params = np.random.randn((dimensions[<span class="number">0</span>] + <span class="number">1</span>) * dimensions[<span class="number">1</span>] + (</div><div class="line">        dimensions[<span class="number">1</span>] + <span class="number">1</span>) * dimensions[<span class="number">2</span>], )</div><div class="line">    gradcheck_naive(<span class="keyword">lambda</span> params:</div><div class="line">        forward_backward_prop(data, labels, params, dimensions), params)</div><div class="line">sanity_check()</div></pre></td></tr></table></figure>
+<pre><code>Running sanity check...
+Gradient check passed!
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          
+            <a href="/tags/Neural-Network/" rel="tag"># Neural Network</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/How-to-understand-softmax-function/" rel="next" title="How to understand softmax function">
+                <i class="fa fa-chevron-left"></i> How to understand softmax function
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/The-principle-of-XGboost/" rel="prev" title="The principle of XGboost">
+                The principle of XGboost <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">ZHANG Bo</p>
+              <p class="site-description motion-element" itemprop="description">Stay hungry.Stay foolish.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Derive-the-gradients-of-the-sigmoid-function"><span class="nav-number">1.</span> <span class="nav-text">Derive the gradients of the sigmoid function.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Derive-the-gradient-of-the-cross-entropy-function-with-the-softmax-fuction"><span class="nav-number">2.</span> <span class="nav-text">Derive the gradient of the cross entropy function with the softmax fuction.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Derive-the-gradients-with-respect-to-the-inputs-x-to-an-one-hidden-layer-neural-network"><span class="nav-number">3.</span> <span class="nav-text">Derive the gradients with respect to the inputs x to an one-hidden-layer neural network.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Calculate-the-value-of-parameters-in-this-neural-network"><span class="nav-number">4.</span> <span class="nav-text">Calculate the value of parameters in this neural network:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fill-in-the-implementation-for-the-sigmoid-activation-function-and-its-gradient"><span class="nav-number">5.</span> <span class="nav-text">Fill in the implementation for the sigmoid activation function and its gradient</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#To-make-debugging-easier-we-will-now-implement-a-gradient-checker-Fill-in-the-implementation-for-gradcheck-naive-in-q2-gradcheck-py"><span class="nav-number">6.</span> <span class="nav-text">To make debugging easier, we will now implement a gradient checker. Fill in the implementation for gradcheck naive in q2 gradcheck.py.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#implement-the-forward-and-backward-passes-for-a-neural-network-with-one-sigmoid-hidden-layer"><span class="nav-number">7.</span> <span class="nav-text">implement the forward and backward passes for a neural network with one sigmoid hidden layer.</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZHANG Bo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

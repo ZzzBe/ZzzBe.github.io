@@ -97,7 +97,7 @@
 <meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/gradcheck.png">
 <meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/forward.png">
 <meta property="og:image" content="https://zzzbe.github.io/How-to-implement-a-neural-network/How-to-implement-a-neural-network/backward.png">
-<meta property="og:updated_time" content="2017-10-07T19:03:44.000Z">
+<meta property="og:updated_time" content="2017-10-09T14:55:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to implement a neural network">
 <meta name="twitter:description" content="Neural Network Basics  Derive the gradients of the sigmoid function.So,the sigmoid function is: $$sigmiod(x) = \sigma (x)$$  $$ \sigma ‘(x) = - \frac{1}{(1+e^{-x})^2} \cdot -e^{-x} $$$$ =  \frac{1}{1">
@@ -345,6 +345,7 @@
 <h3 id="Derive-the-gradients-of-the-sigmoid-function"><a href="#Derive-the-gradients-of-the-sigmoid-function" class="headerlink" title="Derive the gradients of the sigmoid function."></a>Derive the gradients of the sigmoid function.</h3><p>So,the sigmoid function is:</p>
 <p>$$sigmiod(x) = \sigma (x)$$ </p>
 <p>$$ \sigma ‘(x) = - \frac{1}{(1+e^{-x})^2} \cdot -e^{-x} $$<br>$$ =  \frac{1}{1+e^{-x}} \cdot \frac{e^{-x}}{1+e^{-x}} $$<br>$$ =  \frac{1}{1+e^{-x}} \cdot (1 - \frac{1}{1+e^{-x}}) $$<br>$$ =  \sigma(x) \cdot (1-\sigma(x)) $$</p>
+<a id="more"></a>
 <h3 id="Derive-the-gradient-of-the-cross-entropy-function-with-the-softmax-fuction"><a href="#Derive-the-gradient-of-the-cross-entropy-function-with-the-softmax-fuction" class="headerlink" title="Derive the gradient of the cross entropy function with the softmax fuction."></a>Derive the gradient of the cross entropy function with the softmax fuction.</h3><p>$$ CE(y,\hat{y}) = - \sum_i y_i log(\hat{y_i}) $$</p>
 <p><img src="How-to-implement-a-neural-network/CEfunction_1.png" alt=""><br><img src="How-to-implement-a-neural-network/CEfunction_2.png" alt=""></p>
 <h3 id="Derive-the-gradients-with-respect-to-the-inputs-x-to-an-one-hidden-layer-neural-network"><a href="#Derive-the-gradients-with-respect-to-the-inputs-x-to-an-one-hidden-layer-neural-network" class="headerlink" title="Derive the gradients with respect to the inputs x to an one-hidden-layer neural network."></a>Derive the gradients with respect to the inputs x to an one-hidden-layer neural network.</h3><p><img src="How-to-implement-a-neural-network/NN.png" alt=""><br><img src="How-to-implement-a-neural-network/GradientsWithNN.png" alt=""></p>

@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/fg.png">
 <meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/struct.png">
 <meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/split_find.png">
-<meta property="og:updated_time" content="2017-10-07T19:03:44.000Z">
+<meta property="og:updated_time" content="2017-10-09T14:54:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The principle of XGboost">
 <meta name="twitter:description" content="Xgboost Introduction to XGboostXGBoost is short for “Extreme Gradient Boosting”, This is a tutorial on gradient boosted trees by the author of xgboost.XGBoost is used for supervised learning problems,">
@@ -338,6 +338,7 @@
       
         <p><strong><em>Xgboost</em></strong></p>
 <h1 id="Introduction-to-XGboost"><a href="#Introduction-to-XGboost" class="headerlink" title="Introduction to XGboost"></a>Introduction to XGboost</h1><p>XGBoost is short for “Extreme Gradient Boosting”, This is a <a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="external">tutorial</a> on gradient boosted trees by the author of xgboost.XGBoost is used for supervised learning problems, where we use the training data (with multiple features) $x_i$ to predict a target variable $y_i$.</p>
+<a id="more"></a>
 <h1 id="Tree-Ensemble"><a href="#Tree-Ensemble" class="headerlink" title="Tree Ensemble"></a>Tree Ensemble</h1><p>To begin with, let’s first learn about the model of xgboost: <strong>tree ensembles</strong>. </p>
 <h2 id="Introduction-to-CART"><a href="#Introduction-to-CART" class="headerlink" title="Introduction to CART"></a>Introduction to CART</h2><p><a href="https://en.wikipedia.org/wiki/Decision_tree_learning" target="_blank" rel="external">Decision tree learning</a> uses a <strong><em>decision tree</em></strong> (as a predictive model) to go from observations about an item (represented in the branches) to conclusions about the item’s target value (represented in the leaves). Tree models where the target variable can take a discrete set of values are called <strong><em>classification trees</em></strong>; in these tree structures, leaves represent class labels and branches represent conjunctions of features that lead to those class labels.Decision trees where the target variable can take continuous values (typically real numbers) are called <strong><em>regression trees</em></strong>.</p>
 <p><strong>Decision trees used in data mining are of two main types:</strong></p>

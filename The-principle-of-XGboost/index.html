@@ -87,16 +87,16 @@
 <meta property="og:site_name" content="Jack&#39;s Notebook">
 <meta property="og:description" content="Xgboost Introduction to XGboostXGBoost is short for “Extreme Gradient Boosting”, This is a tutorial on gradient boosted trees by the author of xgboost.XGBoost is used for supervised learning problems,">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/cart.png">
-<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/twocart.png">
-<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/fg.png">
-<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/struct.png">
-<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/split_find.png">
+<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/cart.png">
+<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/twocart.png">
+<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/fg.png">
+<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/struct.png">
+<meta property="og:image" content="https://zzzbe.github.io/The-principle-of-XGboost/split_find.png">
 <meta property="og:updated_time" content="2017-10-09T14:54:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The principle of XGboost">
 <meta name="twitter:description" content="Xgboost Introduction to XGboostXGBoost is short for “Extreme Gradient Boosting”, This is a tutorial on gradient boosted trees by the author of xgboost.XGBoost is used for supervised learning problems,">
-<meta name="twitter:image" content="https://zzzbe.github.io/The-principle-of-XGboost/The-principle-of-XGboost/cart.png">
+<meta name="twitter:image" content="https://zzzbe.github.io/The-principle-of-XGboost/cart.png">
 
 
 
@@ -348,9 +348,9 @@
 </ul>
 <p>The tree ensemble model is a set of classification and regression trees (<a href="https://en.wikipedia.org/wiki/Predictive_analytics#Classification_and_regression_trees_.28CART.29" target="_blank" rel="external">CART</a>). <strong><em>CART</em></strong> are a non-parametric decision tree learning technique that produces either classification or regression trees, depending on whether the dependent variable is categorical or numeric, respectively.</p>
 <h2 id="A-simple-example"><a href="#A-simple-example" class="headerlink" title="A simple example"></a>A simple example</h2><p>Here’s a simple example of a CART that classifies whether someone will like computer games.</p>
-<p><img src="The-principle-of-XGboost/cart.png" alt=""></p>
+<p><img src="/The-principle-of-XGboost/cart.png" alt=""></p>
 <h2 id="CART-Model"><a href="#CART-Model" class="headerlink" title="CART Model"></a>CART Model</h2><p>Usually, a single tree is not strong enough to be used in practice. What is actually used is the so-called tree ensemble model, which sums the prediction of multiple trees together.</p>
-<p><img src="The-principle-of-XGboost/twocart.png" alt=""></p>
+<p><img src="/The-principle-of-XGboost/twocart.png" alt=""></p>
 <p>The prediction scores of each individual tree are summed up to get the final score.</p>
 <h1 id="Tree-Boosting"><a href="#Tree-Boosting" class="headerlink" title="Tree Boosting"></a>Tree Boosting</h1><p>Assuming we have $K$ trees,mathematically, we can write our model in the form:</p>
 <p>$$ \hat{y<em>i} = \sum</em>{k=1}^K f_k(x_i), f_k \in \mathcal{F} $$</p>
@@ -369,14 +369,14 @@
 <p>$$ \sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t) $$<br>This becomes our optimization goal for the new tree. One important advantage of this definition is that it only depends on $g_i$ and $h_i$ . This is how xgboost can support custom loss functions. We can optimize every loss function, including logistic regression and weighted logistic regression, using exactly the same solver that takes $ g_i$ and $h_i$ as input!</p>
 <h2 id="Refine-the-definition-of-tree"><a href="#Refine-the-definition-of-tree" class="headerlink" title="Refine the definition of tree"></a>Refine the definition of tree</h2><p>We have introduced the training step, but wait, there is one important thing, the regularization! We need to define the complexity of the tree $\Omega(f)$. In order to do so, let us first refine the definition of the tree $f(x) $ as</p>
 <p>$$f<em>t(x) = w</em>{q(x)}, w \in R^T, q:R^d\rightarrow {1,2,\cdots,T} $$<br>Here $ w $ is the vector of scores on leaves, $ q $ is a function assigning each data point to the corresponding leaf, and $ T $ is the number of leaves</p>
-<p><img src="The-principle-of-XGboost/fg.png" alt=""></p>
+<p><img src="/The-principle-of-XGboost/fg.png" alt=""></p>
 <h2 id="Define-the-Complexity-of-Tree"><a href="#Define-the-Complexity-of-Tree" class="headerlink" title="Define the Complexity of Tree"></a>Define the Complexity of Tree</h2><p>In XGBoost, we define the complexity as</p>
 <p>$$\Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2 $$</p>
 <h2 id="The-Structure-Score"><a href="#The-Structure-Score" class="headerlink" title="The Structure Score"></a>The Structure Score</h2><p>Here is the magical part of the derivation. After reformalizing the tree model, we can write the objective value with the $ t$-th tree as:</p>
 <p>$$\begin{split}Obj^{(t)} &amp;\approx \sum_{i=1}^n [g<em>i w</em>{q(x_i)} + \frac{1}{2} h<em>i w</em>{q(x<em>i)}^2] + \gamma T + \frac{1}{2}\lambda \sum</em>{j=1}^T w<em>j^2\ &amp;= \sum^T</em>{j=1} [(\sum_{i\in I_j} g_i) w<em>j + \frac{1}{2} (\sum</em>{i\in I_j} h_i + \lambda) w_j^2 ] + \gamma T \end{split}$$<br>where $I_j = {i|q(x_i)=j} $ is the set of indices of data points assigned to the $ j $-th leaf. Notice that in the second line we have changed the index of the summation because all the data points on the same leaf get the same score. We could further compress the expression by defining $ G<em>j = \sum</em>{i\in I_j} g_i $ and $ H<em>j = \sum</em>{i\in I_j} h_i $:</p>
 <p>$$\text{obj}^{(t)} = \sum^T_{j=1} [G_jw_j + \frac{1}{2} (H_j+\lambda) w_j^2] +\gamma T $$<br>In this equation $ w_j $ are independent with respect to each other, the form $$ G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2 $$ is quadratic and the best $w_j $ for a given structure $q(x)$ and the best objective reduction we can get is:</p>
 <p>$$\begin{split}w_j^\ast = -\frac{G_j}{H<em>j+\lambda}\ \text{obj}^\ast = -\frac{1}{2} \sum</em>{j=1}^T \frac{G_j^2}{H_j+\lambda} + \gamma T \end{split}$$<br>The last equation measures how good a tree structure $q(x)$ is.</p>
-<p><img src="The-principle-of-XGboost/struct.png" alt=""></p>
+<p><img src="/The-principle-of-XGboost/struct.png" alt=""></p>
 <h2 id="Learn-the-tree-structure"><a href="#Learn-the-tree-structure" class="headerlink" title="Learn the tree structure"></a>Learn the tree structure</h2><p>Now that we have a way to measure how good a tree is, ideally we would enumerate all possible trees and pick the best one. In practice this is intractable, so we will try to optimize one level of the tree at a time. Specifically we try to split a leaf into two leaves, and the score it gains is</p>
 <p>$$ Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right] - \gamma $$<br>This formula can be decomposed as:</p>
 <ul>
@@ -386,7 +386,7 @@
 <li>regularization on the additional leaf </li>
 </ul>
 <p>For real valued data, we usually want to search for an optimal split. To efficiently do so, we place all the instances in sorted order, like the following picture. </p>
-<p><img src="The-principle-of-XGboost/split_find.png" alt=""></p>
+<p><img src="/The-principle-of-XGboost/split_find.png" alt=""></p>
 <p>A left to right scan is sufficient to calculate the structure score of all possible split solutions, and we can find the best split efficiently.</p>
 
       
